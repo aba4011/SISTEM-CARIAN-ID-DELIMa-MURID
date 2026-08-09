@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Carian ID DELIMa | SK Sultan Idris II</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #1d4ed8;
+      --primary-hover: #1e40af;
+      --primary-light: #eff6ff;
+      --secondary: #10b981;
+      --secondary-hover: #059669;
+      --bg-gradient: linear-[#f0f4f8], #e2e8f0;
+      --surface: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+      --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Header Section */
+    header {
+      text-align: center;
+      margin-top: 12px;
+      margin-bottom: 24px;
+    }
+
+    .logo-box {
+      width: 80px;
+      height: 80px;
+      background: var(--surface);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px auto;
+      box-shadow: var(--shadow-md);
+      border: 3px solid #ffffff;
+    }
+
+    .logo-box svg {
+      width: 44px;
+      height: 44px;
+      fill: var(--primary);
+    }
+
+    .school-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+
+    .main-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-top: 2px;
+      line-height: 1.25;
+    }
+
+    .sub-title {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Card Component */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    /* Segmented Control / Tabs */
+    .segmented-control {
+      display: flex;
+      background: #f1f5f9;
+      padding: 5px;
+      border-radius: var(--radius-md);
+      margin-bottom: 20px;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 14px;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .tab-btn.active {
+      background: var(--surface);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Form & Input */
+    .input-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 14px 40px 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-field:focus {
+      border-color: var(--primary);
+      background-color: #fafafa;
+    }
+
+    .clear-btn {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      display: none;
+      padding: 4px;
+    }
+
+    .clear-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Primary Button */
+    .btn-search {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
+    }
+
+    .btn-search:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-search:active {
+      transform: scale(0.98);
+    }
+
+    .btn-search:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Result Card Layout */
+    .result-header {
+      border-bottom: 2px dashed var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .result-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .badge-class {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .info-row {
+      margin-bottom: 14px;
+    }
+
+    .info-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      word-break: break-all;
+    }
+
+    .credential-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .credential-text {
+      font-family: monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: 0.5px;
+    }
+
+    .action-btn-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-action {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    .btn-reset {
+      width: 100%;
+      margin-top: 16px;
+      background: transparent;
+      border: 2px solid var(--border);
+      color: var(--text-muted);
+      padding: 12px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-reset:hover {
+      background: #f8fafc;
+      color: var(--text-main);
+    }
+
+    /* Message State Cards */
+    .state-card {
+      text-align: center;
+      padding: 24px 12px;
+    }
+
+    .state-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px auto;
+    }
+
+    .state-icon.warning { background: #fffbebfb; color: #d97706; }
+    .state-icon.danger { background: #fef2f2; color: #dc2626; }
+    .state-icon.info { background: #eff6ff; color: #2563eb; }
+
+    .state-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .state-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      z-index: 1000;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    /* Utilities */
+    .hidden { display: none !important; }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- HEADER -->
+    <header>
+      <div class="logo-box" aria-label="Logo Sekolah">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4l7 3.82 7-3.82v-4L12 17l-7-3.82z"/>
+        </svg>
+      </div>
+      <div class="school-title">SK Sultan Idris II, Kuala Kangsar</div>
+      <h1 class="main-title">SISTEM CARIAN ID DELIMa</h1>
+      <p class="sub-title">Cari ID DELIMa dan kata laluan anda dengan mudah.</p>
+    </header>
+
+    <!-- FORM CARD -->
+    <main class="card" id="searchCard">
+      
+      <!-- SEGMENTED CONTROL / TABS -->
+      <div class="segmented-control" role="tablist">
+        <button type="button" class="tab-btn active" id="tabName" role="tab" aria-selected="true" onclick="switchTab('NAME')">
+          🔵 NAMA PENUH
+        </button>
+        <button type="button" class="tab-btn" id="tabIc" role="tab" aria-selected="false" onclick="switchTab('IC')">
+          🟢 NO. KAD PENGENALAN
+        </button>
+      </div>
+
+      <!-- SEARCH FORM -->
+      <form id="searchForm" onsubmit="handleSearch(event)">
+        <div class="input-group">
+          <label class="input-label" id="inputLabel" for="searchInput">Masukkan Nama Penuh</label>
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              id="searchInput" 
+              class="input-field" 
+              placeholder="Contoh: AHMAD BIN ALI" 
+              autocomplete="off"
+              required
+            >
+            <button type="button" class="clear-btn" id="clearBtn" onclick="clearInput()" aria-label="Padam input">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-search" id="btnSubmit">
+          <span id="btnIcon">🔍</span>
+          <span id="btnText">CARI ID DELIMa</span>
+        </button>
+      </form>
+    </main>
+
+    <!-- LOADING CARD -->
+    <div class="card hidden" id="loadingCard">
+      <div class="state-card">
+        <div class="state-icon info">
+          <div class="spinner" style="border-top-color: var(--primary); border-color: #bfdbfe;"></div>
+        </div>
+        <div class="state-title">🔄 Sedang mencari...</div>
+        <p class="state-desc">Sila tunggu sebentar sementara sistem menyemak pangkalan data.</p>
+      </div>
+    </div>
+
+    <!-- RESULT CARD (SINGLE MATCH) -->
+    <div class="card hidden" id="resultCard">
+      <div class="result-header">
+        <div class="result-title">Maklumat Murid</div>
+        <span class="badge-class" id="resKelas">6 BESTARI</span>
+      </div>
+
+      <div class="info-row">
+        <div class="info-label">Nama Penuh</div>
+        <div class="info-value" id="resNama">-</div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-label">Tahun</div>
+        <div class="info-value" id="resTahun">-</div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-label">ID DELIMa</div>
+        <div class="credential-box">
+          <span class="credential-text" id="resIdDelima">-</span>
+          <div class="action-btn-group">
+            <button type="button" class="btn-action" onclick="copyToClipboard('resIdDelima', 'ID DELIMa telah disalin.')">
+              📋 Salin
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-label">Kata Laluan</div>
+        <div class="credential-box">
+          <span class="credential-text" id="resPassword">••••••••</span>
+          <div class="action-btn-group">
+            <button type="button" class="btn-action" id="btnTogglePass" onclick="togglePassword()">
+              👁 Lihat
+            </button>
+            <button type="button" class="btn-action" onclick="copyToClipboard('realPassword', 'Kata laluan telah disalin.', true)">
+              📋 Salin
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn-reset" onclick="resetSearch()">
+        ↻ Carian Baharu
+      </button>
+    </div>
+
+    <!-- NOT FOUND / DUPLICATE CARD -->
+    <div class="card hidden" id="msgCard">
+      <div class="state-card">
+        <div class="state-icon warning" id="msgIcon">🔍</div>
+        <div class="state-title" id="msgTitle">Maklumat Tidak Ditemui</div>
+        <p class="state-desc" id="msgDesc">Maaf, maklumat yang dimasukkan tidak sepadan dengan rekod kami.</p>
+        <button type="button" class="btn-reset" onclick="resetSearch()">
+          ↻ Cuba Lagi
+        </button>
+      </div>
+    </div>
+
+    <!-- ERROR CARD -->
+    <div class="card hidden" id="errorCard">
+      <div class="state-card">
+        <div class="state-icon danger">⚠️</div>
+        <div class="state-title">Sistem Tidak Dapat Dicapai</div>
+        <p class="state-desc">Sistem sedang mengalami gangguan sementara. Sila cuba lagi sebentar nanti.</p>
+        <button type="button" class="btn-reset" onclick="resetSearch()">
+          ↻ Cuba Lagi
+        </button>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      © 2026 SK Sultan Idris II, Kuala Kangsar<br>
+      Sistem Carian ID DELIMa
+    </footer>
+
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast">
+    <span>✅</span>
+    <span id="toastMsg">Mesej Notifikasi</span>
+  </div>
+
+  <script>
+    /**
+     * KONFIGURASI FRONTEND
+     * Masukkan Web App URL yang didapati selepas Deploy Google Apps Script.
+     */
+    const CONFIG = {
+      WEB_APP_URL: "MASUKKAN_WEB_APP_URL_ANDA_DI_SINI"
+    };
+
+    // Global State
+    let currentMode = "NAME"; // "NAME" atau "IC"
+    let rawPasswordStore = "";
+    let isPasswordVisible = false;
+
+    // DOM Elements
+    const tabName = document.getElementById('tabName');
+    const tabIc = document.getElementById('tabIc');
+    const inputLabel = document.getElementById('inputLabel');
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearBtn');
+    const searchCard = document.getElementById('searchCard');
+    const loadingCard = document.getElementById('loadingCard');
+    const resultCard = document.getElementById('resultCard');
+    const msgCard = document.getElementById('msgCard');
+    const errorCard = document.getElementById('errorCard');
+    const btnSubmit = document.getElementById('btnSubmit');
+
+    // Auto Focus On Load
+    window.addEventListener('DOMContentLoaded', () => {
+      searchInput.focus();
+    });
+
+    // Listeners for input changes
+    searchInput.addEventListener('input', () => {
+      clearBtn.style.display = searchInput.value.trim() !== "" ? "block" : "none";
+    });
+
+    function clearInput() {
+      searchInput.value = "";
+      clearBtn.style.display = "none";
+      searchInput.focus();
+    }
+
+    function switchTab(mode) {
+      currentMode = mode;
+      clearInput();
+
+      if (mode === 'NAME') {
+        tabName.classList.add('active');
+        tabName.setAttribute('aria-selected', 'true');
+        tabIc.classList.remove('active');
+        tabIc.setAttribute('aria-selected', 'false');
+
+        inputLabel.innerText = "Masukkan Nama Penuh";
+        searchInput.placeholder = "Contoh: AHMAD BIN ALI";
+        searchInput.type = "text";
+      } else {
+        tabIc.classList.add('active');
+        tabIc.setAttribute('aria-selected', 'true');
+        tabName.classList.remove('active');
+        tabName.setAttribute('aria-selected', 'false');
+
+        inputLabel.innerText = "Masukkan Nombor Kad Pengenalan";
+        searchInput.placeholder = "Contoh: 120101081234 atau 120101-08-1234";
+        searchInput.type = "text";
+      }
+    }
+
+    async function handleSearch(e) {
+      e.preventDefault();
+      const query = searchInput.value.trim();
+
+      if (!query) return;
+
+      // Sembunyikan semua kad, tunjuk loading
+      hideAllCards();
+      loadingCard.classList.remove('hidden');
+
+      try {
+        const response = await fetch(CONFIG.WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ type: currentMode, query: query })
+        });
+
+        const resData = await response.json();
+        loadingCard.classList.add('hidden');
+
+        if (resData.status === "success") {
+          if (resData.matchType === "SINGLE") {
+            displaySingleResult(resData.data);
+          } else if (resData.matchType === "DUPLICATE") {
+            displayDuplicateWarning(resData.message);
+          }
+        } else if (resData.status === "notFound") {
+          displayNotFound();
+        } else {
+          // Ralat spesifik atau kerosakan konfigurasi backend
+          showErrorCard();
+        }
+
+      } catch (err) {
+        console.error("Fetch Error:", err);
+        loadingCard.classList.add('hidden');
+        showErrorCard();
+      }
+    }
+
+    function displaySingleResult(data) {
+      document.getElementById('resNama').innerText = data.nama;
+      document.getElementById('resTahun').innerText = "Tahun " + data.tahun;
+      document.getElementById('resKelas').innerText = data.kelas;
+      document.getElementById('resIdDelima').innerText = data.idDelima;
+
+      // Simpan password dalam memori JS pembolehubah sahaja (Bukan DOM / LocalStorage)
+      rawPasswordStore = data.password;
+      isPasswordVisible = false;
+      document.getElementById('resPassword').innerText = "••••••••";
+      document.getElementById('btnTogglePass').innerText = "👁 Lihat";
+
+      resultCard.classList.remove('hidden');
+    }
+
+    function displayDuplicateWarning(message) {
+      document.getElementById('msgIcon').innerText = "⚠️";
+      document.getElementById('msgIcon').className = "state-icon warning";
+      document.getElementById('msgTitle').innerText = "Beberapa Rekod Ditemui";
+      document.getElementById('msgDesc').innerText = message;
+      msgCard.classList.remove('hidden');
+    }
+
+    function displayNotFound() {
+      document.getElementById('msgIcon').innerText = "🔍";
+      document.getElementById('msgIcon').className = "state-icon warning";
+      document.getElementById('msgTitle').innerText = "Maklumat Tidak Ditemui";
+      document.getElementById('msgDesc').innerText = "Maaf, maklumat yang dimasukkan tidak sepadan dengan rekod kami. Sila semak semula nama penuh atau nombor kad pengenalan anda.";
+      msgCard.classList.remove('hidden');
+    }
+
+    function showErrorCard() {
+      errorCard.classList.remove('hidden');
+    }
+
+    function togglePassword() {
+      const passElem = document.getElementById('resPassword');
+      const btnToggle = document.getElementById('btnTogglePass');
+
+      if (isPasswordVisible) {
+        passElem.innerText = "••••••••";
+        btnToggle.innerText = "👁 Lihat";
+        isPasswordVisible = false;
+      } else {
+        passElem.innerText = rawPasswordStore;
+        btnToggle.innerText = "🙈 Sembunyi";
+        isPasswordVisible = true;
+      }
+    }
+
+    function copyToClipboard(elementId, successMsg, isRawPassword = false) {
+      let textToCopy = "";
+      if (isRawPassword) {
+        textToCopy = rawPasswordStore;
+      } else {
+        textToCopy = document.getElementById(elementId).innerText;
+      }
+
+      if (!textToCopy || textToCopy === "••••••••") return;
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        showToast(successMsg);
+      }).catch(err => {
+        // Fallback untuk pelayar lama
+        const textarea = document.createElement("textarea");
+        textarea.value = textToCopy;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        showToast(successMsg);
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function resetSearch() {
+      hideAllCards();
+      searchCard.classList.remove('hidden');
+      clearInput();
+      rawPasswordStore = "";
+    }
+
+    function hideAllCards() {
+      searchCard.classList.add('hidden');
+      loadingCard.classList.add('hidden');
+      resultCard.classList.add('hidden');
+      msgCard.classList.add('hidden');
+      errorCard.classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
