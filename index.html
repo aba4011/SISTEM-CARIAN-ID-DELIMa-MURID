@@ -57,8 +57,8 @@
     }
 
     .logo-wrapper {
-      width: 72px;
-      height: 72px;
+      width: 84px;
+      height: 84px;
       background: var(--surface);
       border-radius: 50%;
       display: inline-flex;
@@ -66,12 +66,15 @@
       justify-content: center;
       box-shadow: var(--shadow-md);
       margin-bottom: 16px;
+      padding: 6px;
+      overflow: hidden;
     }
 
-    .logo-wrapper svg {
-      width: 38px;
-      height: 38px;
-      color: var(--primary);
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
     }
 
     .school-name {
@@ -404,9 +407,7 @@
     <!-- Header -->
     <header class="header">
       <div class="logo-wrapper">
-        <svg fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zm0 13.09L4.22 12 12 7.78 19.78 12 12 16.09zM6 14.75V18c0 1.66 2.69 3 6 3s6-1.34 6-3v-3.25c-1.42 1.01-3.6 1.75-6 1.75s-4.58-.74-6-1.75z"/>
-        </svg>
+        <img src="https://i.ibb.co/XfHhJH1d/Untitled-design.png" alt="Logo SK Sultan Idris II" class="logo-img">
       </div>
       <div class="school-name">SK Sultan Idris II, Kuala Kangsar</div>
       <h1 class="app-title">SISTEM CARIAN ID DELIMa</h1>
