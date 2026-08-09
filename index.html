@@ -661,11 +661,21 @@
       loadingCard.classList.remove('hidden');
 
       try {
-        const response = await fetch(CONFIG.WEB_APP_URL, {
+        // Pastikan URL bersih daripada sebarang ruang kosong
+        const cleanUrl = CONFIG.WEB_APP_URL.trim();
+
+        const response = await fetch(cleanUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ type: currentMode, query: query })
+          headers: { 
+            'Content-Type': 'text/plain;charset=utf-8' 
+          },
+          body: JSON.stringify({ type: currentMode, query: query }),
+          redirect: 'follow' // PENTING untuk kendalikan pengalihan Google Apps Script
         });
+
+        if (!response.ok) {
+          throw new Error(`HTTP Error Status: ${response.status}`);
+        }
 
         const resData = await response.json();
         loadingCard.classList.add('hidden');
@@ -679,15 +689,15 @@
         } else if (resData.status === "notFound") {
           displayNotFound();
         } else {
-          // Ralat spesifik atau kerosakan konfigurasi backend
           showErrorCard();
         }
 
       } catch (err) {
-        console.error("Fetch Error:", err);
+        console.error("Fetch Error Detail:", err);
         loadingCard.classList.add('hidden');
         showErrorCard();
       }
+    }
     }
 
     function displaySingleResult(data) {
